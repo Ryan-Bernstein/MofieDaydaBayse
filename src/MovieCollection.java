@@ -8,6 +8,7 @@ public class MovieCollection
 {
   private ArrayList<Movie> movies;
   private Scanner scanner;
+  private ArrayList<String> castList;
 
   public MovieCollection(String fileName)
   {
@@ -147,6 +148,25 @@ public class MovieCollection
       listToSort.set(possibleIndex, temp);
     }
   }
+  private void smartInsert(ArrayList<String> list, String thing){
+    int ind = list.size() - 1;
+    while(ind >= 1 && list.get(ind - 1).compareTo(thing) > 0){
+      ind--;
+    }
+    list.add(ind, thing);
+  }
+  private ArrayList<String> createActorSet(ArrayList<Movie> movies){
+    ArrayList<String> allCast = new ArrayList<String>();
+    for (Movie mov: movies){
+      String[] cast = mov.getCast();
+      for (String member: cast){
+        if(!containsStr(allCast, member)){
+          smartInsert(allCast, member);
+        }
+      }
+    }
+    return allCast;
+  }
   
   private void displayMovieInfo(Movie movie)
   {
@@ -161,15 +181,74 @@ public class MovieCollection
     System.out.println("User rating: " + movie.getUserRating());
     System.out.println("Box office revenue: " + movie.getRevenue());
   }
-  
+
+  public static boolean containsStr(String[] arr, String target){ //helper method to search an array for obj
+    for (int i = 0; i < arr.length; i++) {
+      if(arr[i].toLowerCase().equals(target)){return true;}
+    }
+    return false;
+  }
+  public static boolean containsStr(ArrayList<String> arr, String target){ //helper method to search an array for obj
+    for (int i = 0; i < arr.size(); i++) {
+      if(arr.get(i).toLowerCase().equals(target)){return true;}
+    }
+    return false;
+  }
+
   private void searchCast()
   {
-    
+
   }
 
   private void searchKeywords()
   {
-    
+    System.out.print("Enter a keyword search term: ");
+    String searchTerm = scanner.nextLine();
+
+    // prevent case sensitivity
+    searchTerm = searchTerm.toLowerCase();
+
+    // arraylist to hold search results
+    ArrayList<Movie> results = new ArrayList<Movie>();
+
+    // search through ALL movies in collection
+    for (int i = 0; i < movies.size(); i++)
+    {
+      String[] movieKeywords = movies.get(i).getKeywords();
+
+      if (containsStr(movieKeywords, searchTerm))
+      {
+        //add the Movie objest to the results list
+        results.add(movies.get(i));
+      }
+    }
+
+    // sort the results by title
+    sortResults(results);
+
+    // now, display them all to the user
+    for (int i = 0; i < results.size(); i++)
+    {
+      String title = results.get(i).getTitle();
+
+      // this will print index 0 as choice 1 in the results list; better for user!
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + title);
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    int choice = scanner.nextInt();
+    scanner.nextLine();
+
+    Movie selectedMovie = results.get(choice - 1);
+
+    displayMovieInfo(selectedMovie);
+
+    System.out.println("\n ** Press Enter to Return to Main Menu **");
+    scanner.nextLine();
   }
   
   private void listGenres()

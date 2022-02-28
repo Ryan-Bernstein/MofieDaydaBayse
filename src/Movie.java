@@ -4,13 +4,13 @@
 public class Movie 
 {
   private String title;
-  private String cast;
+  private String[] cast;
   private String director;
   private String tagline;
-  private String keywords;
+  private String[] keywords;
   private String overview;
   private int runtime;
-  private String genres;
+  private String[] genres;
   private double userRating;
   private int year;
   private int revenue;
@@ -20,13 +20,13 @@ public class Movie
                 double userRating, int year, int revenue)
   {
     this.title = title;
-    this.cast = cast;
+    this.cast = cast.split("[|]");
     this.director = director;
     this.tagline = tagline;
-    this.keywords = keywords;
+    this.keywords = keywords.split("[|]");;
     this.overview = overview;
     this.runtime = runtime;
-    this.genres = genres;
+    this.genres = genres.split("[|]");;
     this.userRating = userRating;
     this.year = year;
     this.revenue = revenue;
@@ -37,7 +37,7 @@ public class Movie
     return title;
   }
   
-  public String getCast()
+  public String[] getCast()
   {
     return cast;
   }
@@ -52,7 +52,7 @@ public class Movie
     return tagline;
   }
   
-  public String getKeywords()
+  public String[] getKeywords()
   {
     return keywords;
   }
@@ -67,7 +67,7 @@ public class Movie
     return runtime;
   }
 
-  public String getGenres()
+  public String[] getGenres()
   {
     return genres;
   }
